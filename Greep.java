@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Greep extends Creature
 {
-    private boolean AtWater = false;
+
     // Remember: you cannot extend the Greep's memory. So:
     // no additional fields (other than final fields) allowed in this class!
 
@@ -36,21 +36,25 @@ public class Greep extends Creature
     {
         super.act();   // do not delete! leave as first statement in act().
         checkEdge();
+
         if (carryingTomato()) {
             if (atShip()) {
                 dropTomato();
             }
             else {
                 turnHome();
+                checkEdge();
                 move();
             }
+
         }
         else {
+
             move();
             checkFood();
         }
-    }
 
+    }
     /**
      * Is there any food here where we are? If so, try to load some!
      */
@@ -66,23 +70,9 @@ public class Greep extends Creature
     }
 
     public void checkEdge(){
-        if(isAtEdge()){
-            turn(Greenfoot.getRandomNumber(180));
-        }
-    }
-
-    public void isWater(){
-        if (((Earth)getWorld()).isWater(getX(), getY())) {
-            AtWater = true;
+        if(isAtEdge() || atWater()){
             turn(180);
-            
-        } else {
-        AtWater = false;   
         }
-    }
-
-    public boolean AtWater(){
-        return AtWater;   
     }
 
     /**
@@ -101,6 +91,7 @@ public class Greep extends Creature
     {
         if (carryingTomato())
             return "greep-with-food.png";
+
         else
             return "greep.png";
     }

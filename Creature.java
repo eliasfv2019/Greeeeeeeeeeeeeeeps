@@ -15,18 +15,18 @@ public abstract class Creature extends Actor
 
     /** Indicate whether we have a tomato with us */
     private boolean carryingTomato = false;
-
+    
     /** The creature's home ship */
     private Ship ship;
 
     private boolean moved = false;
     private boolean atWater = false;
     private int timeToSpit = 0;
-
+    
     /** General purpose memory */
     private int memory;
     private boolean[] flags;
-
+    
     /**
      * Create a creature at its ship.
      */
@@ -36,7 +36,8 @@ public abstract class Creature extends Actor
         flags = new boolean[2];
         setRotation(Greenfoot.getRandomNumber(360));
     }
-
+    
+    
     /**
      * Act - must be called as part of subclass act. This ensures single
      * movement in each act round.
@@ -45,7 +46,8 @@ public abstract class Creature extends Actor
     {
         moved = false;
     }
-
+    
+    
     /**
      * Turn 'angle' degrees towards the right (clockwise).
      */
@@ -53,6 +55,7 @@ public abstract class Creature extends Actor
     {
         setRotation(getRotation() + angle);
     }
+    
 
     /**
      * Turn in the direction facing the home ship.
@@ -63,14 +66,15 @@ public abstract class Creature extends Actor
         int deltaY = ship.getY() - getY();
         setRotation((int) (180 * Math.atan2(deltaY, deltaX) / Math.PI));
     }
-
+    
+    
     /**
      * True if we are at our space ship.
      */
     public final boolean atShip()
     {
-        Actor ship = getOneIntersectingObject(Ship.class);
-        return ship != null;
+         Actor ship = getOneIntersectingObject(Ship.class);
+         return ship != null;
     }
 
     /**
@@ -81,7 +85,7 @@ public abstract class Creature extends Actor
     {
         if(moved)   // can move only once per 'act' round
             return;
-
+            
         // there's a 3% chance that we randomly turn a little off course
         if (randomChance(3)) {
             turn((Greenfoot.getRandomNumber(3) - 1) * 10);
@@ -90,7 +94,7 @@ public abstract class Creature extends Actor
         double angle = Math.toRadians( getRotation() );
         int x = (int) Math.round(getX() + Math.cos(angle) * WALKING_SPEED);
         int y = (int) Math.round(getY() + Math.sin(angle) * WALKING_SPEED);
-
+        
         // now make sure that we are not stepping out of the world
         if (x >= getWorld().getWidth()) {
             x = getWorld().getWidth() - 1;
@@ -104,25 +108,22 @@ public abstract class Creature extends Actor
         if (y < 0) {
             y = 0;
         }
-
-        if (((Earth)getWorld()).isWater(x, y) && isTouching(TomatoPile.class)) {
+        
+        if (((Earth)getWorld()).isWater(x, y)) {
             atWater = true;
-            turn(120);
-
         }
         else {
             atWater = false;
             setLocation(x, y);
         }
-
-        if(timeToSpit > 0){
+        
+        if(timeToSpit > 0)
             timeToSpit--;
-
-            moved = true;
             
-        }
+        moved = true;
     }
-
+    
+    
     /**
      * Return true if we have just seen water in front of us.
      */
@@ -130,7 +131,8 @@ public abstract class Creature extends Actor
     {
         return atWater;
     }
-
+    
+    
     /**
      * Load a tomato onto *another* creature. This works only if there is another creature
      * and a tomato pile present, otherwise this method does nothing.
@@ -150,6 +152,7 @@ public abstract class Creature extends Actor
         }
     }
 
+    
     /**
      * Check whether we can see paint of a given color where we are sitting.
      */
@@ -164,6 +167,7 @@ public abstract class Creature extends Actor
         return false;
     }
 
+        
     /**
      * Check whether we are carrying a tomato.
      */
@@ -171,7 +175,7 @@ public abstract class Creature extends Actor
     {
         return carryingTomato;
     }
-
+        
     /**
      * Remove the tomato currently carried (and return true). Return
      * false if we were not carrying one.
@@ -185,6 +189,7 @@ public abstract class Creature extends Actor
         else
             return false;
     }
+    
 
     /**
      * Receive a tomato and carry it.
@@ -195,6 +200,7 @@ public abstract class Creature extends Actor
         setImage(getCurrentImage());
     }
 
+    
     /**
      * Drop the tomato we are carrying. If we are at the ship, it is counted.
      * If not, it's just gone...
@@ -203,7 +209,7 @@ public abstract class Creature extends Actor
     {
         if (!carryingTomato)
             return;
-
+            
         if (atShip()) {
             ship.storeTomato(this);
         }
@@ -211,12 +217,14 @@ public abstract class Creature extends Actor
         setImage(getCurrentImage());
     }
 
+    
     /**
      * This method must be defined in subclasses. It gives subclasses the chance
      * to specify their own images.
      */
     abstract public String getCurrentImage();
 
+    
     /**
      * Test if we are close to one of the edges of the world. Return true if we are.
      */
@@ -230,6 +238,7 @@ public abstract class Creature extends Actor
             return false;
     }
 
+    
     /**
      * Return 'true' in exactly 'percent' number of calls. That is: a call
      * randomChance(25) has a 25% chance to return true.
@@ -238,7 +247,8 @@ public abstract class Creature extends Actor
     {
         return Greenfoot.getRandomNumber(100) < percent;
     }
-
+    
+    
     /**
      * Spit a drop of paint onto the ground. We can spit in three colors: "red", "orange",
      * and "purple". (All other strings will be mapped to one of these.)
@@ -251,7 +261,8 @@ public abstract class Creature extends Actor
             timeToSpit = TIME_TO_SPIT + Greenfoot.getRandomNumber(10);
         }
     }
-
+    
+    
     /**
      * Store a user defined value. Attention: even though the parameter type is int,
      * only byte size values (0 <= val <= 255) are accepted.
@@ -263,7 +274,8 @@ public abstract class Creature extends Actor
         else 
             memory = val;
     }
-
+    
+    
     /**
      * Retrieve a previously stored value.
      */
@@ -271,6 +283,7 @@ public abstract class Creature extends Actor
     {
         return memory;
     }
+
 
     /**
      * Store a user defined boolean value (a "flag"). Two flags are available, 
@@ -283,7 +296,8 @@ public abstract class Creature extends Actor
         else 
             flags[flagNo-1] = val;
     }
-
+    
+    
     /**
      * Retrieve the value of a flag. 'flagNo' can be 1 or 2.
      */
