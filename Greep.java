@@ -38,15 +38,16 @@ public class Greep extends Creature
         checkEdge();
 
         if (carryingTomato()) {
+
             if (atShip()) {
                 dropTomato();
+
             }
             else {
                 turnHome();
                 checkEdge();
-                move();
+                move();   
             }
-
         }
         else {
 
@@ -55,6 +56,7 @@ public class Greep extends Creature
         }
 
     }
+
     /**
      * Is there any food here where we are? If so, try to load some!
      */
@@ -70,8 +72,13 @@ public class Greep extends Creature
     }
 
     public void checkEdge(){
-        if(isAtEdge() || atWater()){
-            turn(180);
+        if(isAtEdge()||atWater()){
+            turn(25);
+            move();
+        }
+        if(atWater() && carryingTomato()){
+            turn(80);
+            move();
         }
     }
 
